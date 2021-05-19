@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Peachy Poopoo</title>
+        <a href="/">Back</a>
+        <link rel="stylesheet" href={{ url_for('static', filename='css/default.css') }}>
+    </head>
+    <body>
+        <h1>Peachy Poopoo</h1>
+        <div>
+          <label for="week">Nutrient Week</label>
+          <select name="week" id="week" value="3V+" onchange="updateWeek(this.value)">
+            <option value="1V">1V</option>
+            <option value="2V">2V</option>
+            <option value="3V+">3V+</option>
+            <option value="1F">1F</option>
+            <option value="2F">2F</option>
+            <option value="3F">3F</option>
+            <option value="4F+">4F+</option>
+            <option value="-3F">-3F</option>
+            <option value="-2F">-2F</option>
+            <option value="-1F">-1F</option>
+            <option value="FF">FF</option>
+          </select>
+        </div>
+        <div>
+          <label for="percent">Percent</label>
+          <input type="number" name="percent" id="percent" value="80" onkeyup="updatePercent(this.value)">
+        </div>
+        <div>
+          <label for="gal">Gallons</label>
+          <input type="number" name="gal" id="gal" value="3" onkeyup="updateGal(this.value)">
+        </div>
+        <div>
+          <label for="calmag">Calmag?</label>
+          <input type="checkbox" name="calmag" id="calmag?" checked onchange="updatecalmag(this.checked)">
+        </div>
+        <p id="error" name="error"></p>
+        <table>
+          <tr>
+            <td>FloraMicro</td>
+            <td id="micro"></td>
+          </tr>
+          <tr>
+            <td>FloraVeg</td>
+            <td id="veg"></td>
+          </tr>
+          <tr>
+            <td>FloraBloom</td>
+            <td id="bloom"></td>
+          </tr>
+          <tr>
+            <td>HydroGuard</td>
+            <td id="guard"></td>
+          </tr>
+          <tr>
+            <td>calmag</td>
+            <td id="calmag"></td>
+          </tr>
+        </table>
+        <h2>Post Nutrient Record</h2>
+        <button type="button" onclick="postPlant()">Submit Record</button>
+        <p id="restmsg"></p>
+        <div>
+          <label for="pHup">pH Up</label>
+          <input type="number" name="pHup" id="pHup" value="0">
+          <label for="pHdown">pH Down</label>
+          <input type="number" name="pHdown" id="pHdown" value="3">
+        </div>
+        <label for="split">Split?</label>
+        <input type="checkbox" name="split" id="split" checked onchange="updateSplit(this.checked)">
+        <div class="onSplit">
+          <select name="plant" id="plant" value={{ current_plants[0] }}>
+            {% for id, name in current_names %}
+              <option value={{ id }}>{{ name }}</option>
+            {% endfor %}
+          </select>
+          <label for="replaceSingle">Replace?</label>
+          <input type="checkbox" name="replaceSingle" id="replaceSingle" onchange="updateReplaceSingle(this.checked)">
+        </div>
+        <div class="onNoSplit">
+          <label for="share">Share?</label>
+          <input type="checkbox" name="share" id="share" onchange="updateShare(this.checked)">
+          <div class="onShare">
+            <label for="shareReplace">Replace?</label>
+            <input type="checkbox" name="shareReplace" id="replaceShare" onchange="updateShareReplace(this.checked)">
+          </div>
+        </div>
+        <div class="onNoShare">
+          {% for id, name in current_names %}
+            <div class="onNoSplit">
+              <h3>{{ name }}</h3>
+              <label for="percentage-{{ id }}">Percentage</label>
+              <input class="splitPlants" type="number" name="percentage-{{ id }}" id="percentage-{{ id }}" value="50">
+              <label for="replace-{{ id }}">Replace?</label>
+              <input class="splitPlants" type="checkbox" name="replace-{{ id }}" id="replace-{{ id }}">
+            </div>
+          {% endfor %}
+        </div>
+        <script src={{ url_for('static', filename='js/common/util.js') }}></script>
+        <script src={{ url_for('static', filename='js/common/current_plants.js') }}></script>
+        <script src={{ url_for('static', filename='js/common/nutrient_schedule.js') }}></script>
+        <script src={{ url_for('static', filename='js/calculator.js') }}></script>
+    </body>
+</html>

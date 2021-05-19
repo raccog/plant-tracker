@@ -1,0 +1,38 @@
+#restmsg {
+    color: 'green';
+    font-size: 20px;
+}
+#errormsg {
+    color: 'red';
+    font-size: 20px;
+}
+
+table,
+td,
+thead,
+th,
+tfoot {
+    border: 1px solid rgb(63, 63, 63);
+    border-collapse: collapse;
+}
+
+td {
+    text-align: right;
+}
+
+tr.datarow:hover {background-color: #ddd;}
+
+#data_table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+th {
+    word-wrap: break-word;
+}
+
+thead,
+tfoot {
+    background-color: rgb(10, 163, 92);
+    color: rgb(20, 20, 20);
+}
