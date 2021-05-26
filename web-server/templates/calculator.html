@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Peachy Poopoo</title>
+        <a href="/">Back</a>
+    </head>
+    <body>
+        <h1>Peachy Poopoo</h1>
+        <div>
+          <label for="week">Nutrient Week</label>
+          <select name="week" id="week" value="3V+" onchange="updateWeek(this.value)">
+            <option value="1V">1V</option>
+            <option value="2V">2V</option>
+            <option value="3V+">3V+</option>
+            <option value="1F">1F</option>
+            <option value="2F">2F</option>
+            <option value="3F">3F</option>
+            <option value="4F+">4F+</option>
+            <option value="-3F">-3F</option>
+            <option value="-2F">-2F</option>
+            <option value="-1F">-1F</option>
+            <option value="FF">FF</option>
+          </select>
+        </div>
+        <div>
+          <label for="percent">Percent</label>
+          <input name="percent" id="percent" value="50" onkeyup="updatePercent(this.value)">
+        </div>
+        <div>
+          <label for="gal">Gallons</label>
+          <input name="gal" id="gal" value="3" onkeyup="updateGal(this.value)">
+        </div>
+        <div>
+          <label for="calmg">CalMg?</label>
+          <input type="checkbox" name="calmg" id="calmg?" checked onchange="updateCalmg(this.checked)">
+        </div>
+        <p id="error">Input Error</p>
+        <p id="micro"></p>
+        <p id="veg"></p>
+        <p id="bloom"></p>
+        <p id="guard"></p>
+        <p id="calmg"></p>
+        <script src={{ url_for('static', filename='js/calculator.js') }} text="/text/javascript"></script>
+    </body>
+</html>
