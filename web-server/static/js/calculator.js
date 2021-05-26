@@ -59,7 +59,7 @@ function updateCalculation() {
         errorEle.textContent = '';
         var calc = data[week].slice();
         for (var i = 0; i < calc.length; ++i) {
-            calc[i] *= percent * gal;
+            calc[i] *= (percent * gal).toFixed(3);
         }
         for (var i = 0; i < 3; ++i) {
             outputEles[i].textContent = add_ml(calc[i]);
