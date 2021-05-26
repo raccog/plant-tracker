@@ -25,7 +25,7 @@
         </div>
         <div>
           <label for="percent">Percent</label>
-          <input name="percent" id="percent" value="50" onkeyup="updatePercent(this.value)">
+          <input name="percent" id="percent" value="80" onkeyup="updatePercent(this.value)">
         </div>
         <div>
           <label for="gal">Gallons</label>
@@ -36,11 +36,28 @@
           <input type="checkbox" name="calmg" id="calmg?" checked onchange="updateCalmg(this.checked)">
         </div>
         <p id="error">Input Error</p>
-        <p id="micro"></p>
-        <p id="veg"></p>
-        <p id="bloom"></p>
-        <p id="guard"></p>
-        <p id="calmg"></p>
+        <table>
+          <tr>
+            <td>FloraMicro</td>
+            <td id="micro"></td>
+          </tr>
+          <tr>
+            <td>FloraVeg</td>
+            <td id="veg"></td>
+          </tr>
+          <tr>
+            <td>FloraBloom</td>
+            <td id="bloom"></td>
+          </tr>
+          <tr>
+            <td>HydroGuard</td>
+            <td id="guard"></td>
+          </tr>
+          <tr>
+            <td>CalMg</td>
+            <td id="calmg"></td>
+          </tr>
+        </table>
         <script src={{ url_for('static', filename='js/calculator.js') }} text="/text/javascript"></script>
     </body>
 </html>

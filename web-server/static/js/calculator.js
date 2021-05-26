@@ -62,9 +62,9 @@ function updateCalculation() {
             calc[i] *= percent * gal;
         }
         for (var i = 0; i < 3; ++i) {
-            outputEles[i].textContent = labels[i] + ' ' + add_ml(calc[i]);
+            outputEles[i].textContent = add_ml(calc[i]);
         }
-        outputEles[3].textContent = labels[3] + ' ' + add_ml(gal * 2);
-        outputEles[4].textContent = labels[4] + ' ' + add_ml(calmg ? calc[3] : 0);
+        outputEles[3].textContent = add_ml(gal * 2);
+        outputEles[4].textContent = add_ml(calmg ? calc[3] : 0);
     }
 }
