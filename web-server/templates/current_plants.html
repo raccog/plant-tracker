@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Current Plants</title>
+        <a href="/">Back</a><br>
+    </head>
+    <body>
+        {% for p in current_plants %}
+            <select name="plant-{{ p }}" id="plant-{{ p }}">
+                {% for id, name in names %}
+                    {% if p == id %}
+                        <option value="{{ id }}" selected>{{ name }}</option>
+                    {% else %}
+                        <option value="{{ id }}">{{ name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        {% endfor %}
+    </body>
+</html>

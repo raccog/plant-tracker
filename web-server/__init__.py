@@ -27,29 +27,12 @@ def data_page():
 
 @app.route("/calculator")
 def calculator_page():
-    # if request.method == 'POST':
-    #     form = request.form
-    #     gal = form['gal']
-    #     now = time()
-    #     if form['split']:
-    #         for id in names.keys():
-    #             assert(f'percentage-{id}' in form)
-
-    #         for id in names.keys():
-    #             if form['share']:
-    #                 g = gal
-    #             else:
-    #                 g = gal * form[f'percentage-{id}']
-    #             record = (now, g, form[f'replace-{id}'], form['percent'], 
-    #                     form['week'], form['pHup'], form['pHdown'], form['calmag'])
-    #             add_record(id, record)
-    #     else:
-    #         assert(form['postPlant'] in names.keys())
-    #         record = (now, gal, form['percent'], form['week'], form['pHup'], form['pHdown'],
-    #                 form['calmag'])
-    #         add_record(form['postPlant'], record)
-
     return render_template('calculator.html', current_plants=current_plants, names=names)
+
+@app.route("/current_plants")
+def current_plants_page():
+    print(names)
+    return render_template('current_plants.html', current_plants=current_plants, names=names)
 
 @app.route("/get/nutrients.json")
 def nutrients_data():
