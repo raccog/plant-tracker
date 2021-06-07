@@ -81,7 +81,7 @@
         </div>
         <div class="onNoSplit">
           <label for="share">Share?</label>
-          <input type="checkbox" name="share" id="share" onchange="updateShare(this.value)">
+          <input type="checkbox" name="share" id="share" onchange="updateShare(this.checked)">
         </div>
         {% for id, name in names %}
             <div class="onNoSplit">

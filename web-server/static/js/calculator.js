@@ -54,6 +54,7 @@ var gal = parseInt(galEle.value);
 var calmag = calmagEle.value;
 
 var split = true;
+var share = false;
 var replaceSingle = false;
 
 const labels = ['micro', 'veg', 'bloom', 'guard', 'calmag'];
@@ -89,6 +90,10 @@ function updateSplit(value) {
     updateVisibility();
 }
 
+function updateShare(value) {
+    share = value;
+}
+
 function updateReplaceSingle(value) {
     replaceSingle = value;
 }
@@ -96,20 +101,24 @@ function updateReplaceSingle(value) {
 function postPlant() {
     if (split) {
         for (let id of current_plants) {
-            var g;
-            if (shareEle.value) {
-                g = gal;
-            } else {
-                g = gal * percentageEles[id];
+            var g = gal;
+            var up = pHupEle.value;
+            var down = pHdownEle.value;
+            if (!share) {
+                var p = percentageEles[id].value * 0.01;
+                g *= p;
+                up *= p;
+                down *= p;
             }
+
             var data = {
                 'id': id,
                 'gal': g,
                 'percent': percent,
                 'week': week,
                 'replace': replaceEles[id].value,
-                'pHup': pHupEle.value,
-                'pHdown': pHdownEle.value,
+                'pHup': up,
+                'pHdown': down,
                 'calmag': calmag
             };
             var xhr = new XMLHttpRequest();
