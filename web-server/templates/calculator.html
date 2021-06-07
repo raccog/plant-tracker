@@ -4,6 +4,9 @@
         <meta charset="utf-8">
         <title>Peachy Poopoo</title>
         <a href="/">Back</a>
+        <style>
+
+        </style>
     </head>
     <body>
         <h1>Peachy Poopoo</h1>
@@ -25,15 +28,15 @@
         </div>
         <div>
           <label for="percent">Percent</label>
-          <input name="percent" id="percent" value="80" onkeyup="updatePercent(this.value)">
+          <input type="number" name="percent" id="percent" value="80" onkeyup="updatePercent(this.value)">
         </div>
         <div>
           <label for="gal">Gallons</label>
-          <input name="gal" id="gal" value="3" onkeyup="updateGal(this.value)">
+          <input type="number" name="gal" id="gal" value="3" onkeyup="updateGal(this.value)">
         </div>
         <div>
-          <label for="calmg">CalMg?</label>
-          <input type="checkbox" name="calmg" id="calmg?" checked onchange="updateCalmg(this.checked)">
+          <label for="calmag">calmag?</label>
+          <input type="checkbox" name="calmag" id="calmag?" checked onchange="updatecalmag(this.checked)">
         </div>
         <p id="error">Input Error</p>
         <table>
@@ -54,10 +57,43 @@
             <td id="guard"></td>
           </tr>
           <tr>
-            <td>CalMg</td>
-            <td id="calmg"></td>
+            <td>calmag</td>
+            <td id="calmag"></td>
           </tr>
         </table>
+        <h2>Post Nutrient Record</h2>
+        <div>
+          <label for="pHup">pH Up</label>
+          <input type="number" name="pHup" id="pHup" value="0">
+          <label for="pHdown">pH Down</label>
+          <input type="number" name="pHdown" id="pHdown" value="3">
+        </div>
+        <label for="split">Split?</label>
+        <input type="checkbox" name="split" id="split" checked onchange="updateSplit(this.checked)">
+        <div class="onSplit">
+          <select name="postPlant" id="postPlant" value={{ current_plants[0] }}>
+            {% for id, name in names %}
+              <option value={{ id }}>{{ name }}</option>
+            {% endfor %}
+          </select>
+          <label for="replaceSingle">Replace?</label>
+          <input type="checkbox" name="replaceSingle" id="replaceSingle" onchange="updateReplaceSingle(this.checked)">
+        </div>
+        <div class="onNoSplit">
+          <label for="share">Share?</label>
+          <input type="checkbox" name="share" id="share" onchange="updateShare(this.value)">
+        </div>
+        {% for id, name in names %}
+            <div class="onNoSplit">
+              <h3>{{ name }}</h3>
+              <label for="percentage-{{ id }}">Percentage</label>
+              <input class="splitPlants" type="number" name="percentage-{{ id }}" id="percentage-{{ id }}" value="50">
+              <label for="replace-{{ id }}">Replace?</label>
+              <input class="splitPlants" type="checkbox" name="replace-{{ id }}" id="replace-{{ id }}">
+            </div>
+        {% endfor %}
+        <button type="button" onclick="postPlant()">Submit Record</button>
         <script src={{ url_for('static', filename='js/calculator.js') }} text="/text/javascript"></script>
+        <script src={{ url_for('static', filename='js/database.js') }} text="/text/javascript"></script>
     </body>
 </html>

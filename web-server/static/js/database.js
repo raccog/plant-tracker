@@ -1,4 +1,4 @@
-function post_record(record) {
+function post_record(record, id) {
     if (record.length != 8) return;
 
     var xhr = new XMLHttpRequest();
@@ -11,5 +11,5 @@ function post_record(record) {
             console.log(xhr.responseText);
         }
     }
-    xhr.send(JSON.stringify(record));
+    xhr.send(JSON.stringify({"record": record, "id": id}));
 }
