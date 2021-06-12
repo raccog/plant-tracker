@@ -22,7 +22,6 @@ def index_page():
 def data_page():
     if request.method == 'POST':
         add_data(request.form['data1'], request.form['data2'])
-        print(f"{request.form['data1']} {request.form['data2']}")
     return render_template('data_input.html')
 
 @app.route("/calculator")

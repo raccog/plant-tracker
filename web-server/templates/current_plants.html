@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title>Current Plants</title>
         <a href="/">Back</a><br>
+        <script src={{ url_for('static', filename='js/current_plants.js') }} text="/text/javascript"></script>
     </head>
     <body>
         {% for p in current_plants %}
@@ -17,5 +18,10 @@
                 {% endfor %}
             </select>
         {% endfor %}
+        
+        <br>
+        <button name="addPlant" id="addPlant" onclick="addPlant()">Add New Plant</button>
+        <button name="reset" id="reset">Reset</button>
+        <button name="submit" id="submit">Submit Changes</button>
     </body>
 </html>
