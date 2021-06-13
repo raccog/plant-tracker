@@ -81,6 +81,7 @@ def create_db(nid):
 
 def new_event(nid, text):
     (con, cur) = _nutrient_db(nid)
-    cur.execute('insert into event values (?, ?)', (time(), text))
+    timestamp = time()
+    cur.execute('insert into events values (?, ?)', (timestamp, text))
     con.commit()
     con.close()

@@ -10,7 +10,7 @@
         <textarea id="event" name="event" rows="5" cols="33"></textarea><br>
         {% for nid, name in current_names %}
         <label for="{{ nid }}">{{ name }}</label>
-        <input type="checkbox" id="{{ nid }}" name="{{ nid }}" checked>
+        <input type="checkbox" id="{{ nid }}" name="{{ nid }}" class="check" checked>
         {% endfor %}<br>
         <button onclick="onSubmit()">Submit Event</button>
         <script src={{ url_for('static', filename='js/new_event.js') }} text="/text/javascript"></script>
