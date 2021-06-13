@@ -36,6 +36,10 @@ def data_page():
 def calculator_page():
     return render_template('calculator.html', current_plants=current_plants, names=names)
 
+@app.route("/new_event")
+def new_event_page():
+    return render_template('new_event.html')
+
 @app.route("/new_grow")
 def new_grow_page():
     return render_template('new_grow.html')
