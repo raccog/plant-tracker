@@ -38,7 +38,7 @@ def calculator_page():
 
 @app.route("/new_event")
 def new_event_page():
-    return render_template('new_event.html')
+    return render_template('new_event.html', current_names=current_names)
 
 @app.route("/new_grow")
 def new_grow_page():
