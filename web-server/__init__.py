@@ -4,7 +4,7 @@ from os import getenv
 from os.path import expanduser, join
 from flask import Flask, render_template, request, redirect, url_for
 
-from .database import add_data, add_record, get_current_names, new_plants, create_db
+from .database import add_data, add_record, get_current_names, new_plants, create_db, new_event
 from .file_edit import write_current_plants
 from .json_sql import pull_nutrients
 from .settings import settings
@@ -61,6 +61,14 @@ def record_post():
             data['pHdown'], data['calmag'])
     add_record(data['id'], record)
     
+    return ''
+
+@app.route("/post/new_event", methods=["POST"])
+def event_post():
+    event = request.get_json()
+    for nid in event['nids']:
+        new_event(nid, event['text'])
+
     return ''
 
 @app.route("/post/new_grow", methods=["POST"])

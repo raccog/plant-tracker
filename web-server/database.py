@@ -1,4 +1,5 @@
 from os.path import join
+from time import time
 import sqlite3
 
 from .settings import settings
@@ -74,5 +75,12 @@ def create_db(nid):
                 (date date, event text)''')
     cur.execute('''create table comments
                 (date date, event text)''')
+    con.commit()
+    con.close()
+
+
+def new_event(nid, text):
+    (con, cur) = _nutrient_db(nid)
+    cur.execute('insert into event values (?, ?)', (time(), text))
     con.commit()
     con.close()
