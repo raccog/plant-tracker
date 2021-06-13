@@ -2,7 +2,7 @@ from time import time
 import json
 from os import getenv
 from os.path import expanduser, join
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 
 from .database import add_data, add_record, get_current_names, new_plants, create_db, new_event
 from .file_edit import write_current_plants
@@ -18,7 +18,7 @@ with open(join(settings.data_path, 'current.json'), 'r') as f:
     d = f.read()
     current_plants = json.loads(d)
 
-names = get_current_names(current_plants)
+current_names = get_current_names(current_plants)
 
 app = Flask(__name__)
 
@@ -34,7 +34,7 @@ def data_page():
 
 @app.route("/calculator")
 def calculator_page():
-    return render_template('calculator.html', current_plants=current_plants, names=names)
+    return render_template('calculator.html', current_plants=current_plants, current_names=current_names)
 
 @app.route("/new_event")
 def new_event_page():
@@ -55,7 +55,7 @@ def current_data():
 @app.route("/post/post_record", methods=["POST"])
 def record_post():
     data = request.get_json()
-    assert(int(data['id']) in [x[0] for x in names])
+    assert(int(data['id']) in [x[0] for x in current_names])
     now = time()
     record = (now, data['gal'], data['replace'], data['percent'] * 100, data['week'], data['pHup'],
             data['pHdown'], data['calmag'])

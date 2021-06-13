@@ -35,9 +35,9 @@ def add_data(d1, d2):
 
 def get_current_names(current_plants):
     (con, cur) = _id_db()
-    names = cur.execute('select * from names').fetchall()
+    names = cur.execute('select * from names where nid in (?, ?)', tuple(current_plants)).fetchall()
     con.close()
-    return tuple([x for x in names if x[0] in current_plants])
+    return names
 
 
 def add_record(nid, record):

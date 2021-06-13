@@ -72,7 +72,7 @@
         <input type="checkbox" name="split" id="split" checked onchange="updateSplit(this.checked)">
         <div class="onSplit">
           <select name="postPlant" id="postPlant" value={{ current_plants[0] }}>
-            {% for id, name in names %}
+            {% for id, name in current_names %}
               <option value={{ id }}>{{ name }}</option>
             {% endfor %}
           </select>
@@ -83,7 +83,7 @@
           <label for="share">Share?</label>
           <input type="checkbox" name="share" id="share" onchange="updateShare(this.checked)">
         </div>
-        {% for id, name in names %}
+        {% for id, name in current_names %}
             <div class="onNoSplit">
               <h3>{{ name }}</h3>
               <label for="percentage-{{ id }}">Percentage</label>
