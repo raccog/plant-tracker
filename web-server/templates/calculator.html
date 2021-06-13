@@ -7,8 +7,6 @@
         <style>
 
         </style>
-        <script src={{ url_for('static', filename='js/calculator.js') }} text="/text/javascript"></script>
-        <script src={{ url_for('static', filename='js/database.js') }} text="/text/javascript"></script>
     </head>
     <body>
         <h1>Peachy Poopoo</h1>
@@ -95,5 +93,7 @@
             </div>
         {% endfor %}
         <button type="button" onclick="postPlant()">Submit Record</button>
+        <script src={{ url_for('static', filename='js/calculator.js') }} text="/text/javascript"></script>
+        <script src={{ url_for('static', filename='js/database.js') }} text="/text/javascript"></script>
     </body>
 </html>

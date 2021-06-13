@@ -12,9 +12,9 @@ from .settings import settings
 
 settings.data_path = getenv("GROW_DATA_PATH")
 if settings.data_path is None:
-    settings.data_path = join(expanduser(), '.grow_data')
+    settings.data_path = expanduser('~/.test_grow_data')
 
-with open('data/CURRENT.json', 'r') as f:
+with open(join(settings.data_path, 'current.json'), 'r') as f:
     d = f.read()
     current_plants = json.loads(d)
 
@@ -36,10 +36,9 @@ def data_page():
 def calculator_page():
     return render_template('calculator.html', current_plants=current_plants, names=names)
 
-@app.route("/current_plants")
-def current_plants_page():
-    print(names)
-    return render_template('current_plants.html', current_plants=current_plants, names=names)
+@app.route("/new_grow")
+def new_grow_page():
+    return render_template('new_grow.html')
 
 @app.route("/get/nutrients.json")
 def nutrients_data():

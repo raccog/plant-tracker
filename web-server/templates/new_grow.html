@@ -3,14 +3,17 @@
     <head>
         <meta charset="utf-8">
         <title>New Grow</title>
-        <script src={{ url_for('static', filename='js/new_grow.js') }} text="/text/javascript"></script>
     </head>
     <body>
         <h1>Set New Grow</h1>
-        <input type="text"><br>
-        <button>Add Plant</button>
+        <label for="p0">Plant 1</label>
+        <input type="text" id="p0" name="p0"><br>
+        <label for="p1">Plant 2</label>
+        <input type="text" id="p1" name="p1"><br>
+        <!-- <button>Add Plant</button>
         <button>Remove Last Plant</button>
-        <br>
-        <button>Submit</button>
+        <br> -->
+        <button onclick="onSubmit()">Submit</button>
+        <script src={{ url_for('static', filename='js/new_grow.js') }} text="/text/javascript"></script>
     </body>
 </html>

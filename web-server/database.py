@@ -1,18 +1,21 @@
+from os.path import join
 import sqlite3
+
+from .settings import settings
 
 
 def _open_db(f):
-    con = sqlite3.connect(f)
+    con = sqlite3.connect(join(settings.data_path, f))
     cur = con.cursor()
     return (con, cur)
 
 
 def _id_db():
-    return _open_db('data/DATABASE.db')
+    return _open_db('DATABASE.db')
 
 
 def _nutrient_db(nid):
-    return _open_db(f'data/nutrients/{str(nid).zfill(3)}.db')
+    return _open_db(f'nutrients/{str(nid).zfill(3)}.db')
 
 
 
