@@ -30,6 +30,7 @@ xhr.onreadystatechange = function () {
 xhr.open("GET", url, true);
 xhr.send();
 
+var postErrorEle = document.getElementById('msg');
 var errorEle = document.getElementById('error');
 var weekEle = document.getElementById('week');
 var percentEle = document.getElementById('percent');
@@ -136,7 +137,15 @@ function updateVisibility() {
     }
 }
 
+function postData(data) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/post/new_record", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(data));
+}
+
 function postPlant() {
+    var data;
     if (split) {
         for (let id of current_plants) {
             var g = gal;
@@ -149,7 +158,7 @@ function postPlant() {
                 down *= p;
             }
 
-            var data = {
+            data = {
                 'id': id,
                 'gal': g,
                 'percent': percent,
@@ -159,13 +168,9 @@ function postPlant() {
                 'pHdown': down,
                 'calmag': calmag
             };
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/post/new_record", true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify(data));
         }
     } else {
-        var data = {
+        data = {
             "id": postPlantEle.value,
             "gal": gal,
             "percent": percent,
@@ -175,9 +180,19 @@ function postPlant() {
             "pHdown": pHdownEle.value,
             "calmag": calmag
         };
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/post/new_record", true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(data));
+    }
+
+    if (confirm('Do you want to post this record to nid' + (split ? 's' : '')
+        + ': ' + (split ? current_plants.toString() : data['id']) +
+        '?\nData:\n\nWeek: ' + data['week'] + '\nGallons: ' + data['gal'] +
+        'gal\nPercentage: ' + (data['percent'] * 100) + '\%\nReplace: ' + data['replace'] +
+        '\npH Up: ' + data['pHup'] + 'mL\npH Down: ' + data['pHdown'] +
+        'mL\nCalMag: ' + data['calmag'])) {
+            postData(data);
+            postErrorEle.style.color = 'green';
+            postErrorEle.textContent = 'Record was successfully posted'
+    } else {
+        postErrorEle.style.color = 'red';
+        postErrorEle.textContent = 'Posting this record was cancelled'
     }
 }
