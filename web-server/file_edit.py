@@ -1,9 +1,7 @@
 import json
 from os.path import join
 
-from .settings import settings
-
-CURRENT_PLANT_PATH = 'current.json'
+from .settings import settings, CURRENT_PLANT_PATH
 
 
 def read_current_plants():

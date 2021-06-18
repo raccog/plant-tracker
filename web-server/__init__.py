@@ -49,7 +49,7 @@ def current_data():
     return json.dumps([str(x) for x in settings.current_plants])
 
 
-@app.route("/post/post_record", methods=["POST"])
+@app.route("/post/new_record", methods=["POST"])
 def record_post():
     data = request.get_json()
     assert(int(data['id']) in [x[0] for x in settings.current_names])

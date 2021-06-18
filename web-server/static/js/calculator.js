@@ -2,7 +2,7 @@ var xhr = new XMLHttpRequest();
 var url = "get/nutrients.json";
 var nutrient_schedule;
 
-xhr.onreadystatechange = function() {
+xhr.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
         nutrient_schedule = JSON.parse(this.responseText)[0];
         updateCalculation();
@@ -17,7 +17,7 @@ var current_plants;
 var percentageEles = {};
 var replaceEles = {};
 
-xhr.onreadystatechange = function() {
+xhr.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
         current_plants = JSON.parse(this.responseText);
         for (var i = 0; i < current_plants.length; ++i) {
@@ -96,52 +96,6 @@ function updateShare(value) {
 
 function updateReplaceSingle(value) {
     replaceSingle = value;
-}
-
-function postPlant() {
-    if (split) {
-        for (let id of current_plants) {
-            var g = gal;
-            var up = pHupEle.value;
-            var down = pHdownEle.value;
-            if (!share) {
-                var p = percentageEles[id].value * 0.01;
-                g *= p;
-                up *= p;
-                down *= p;
-            }
-
-            var data = {
-                'id': id,
-                'gal': g,
-                'percent': percent,
-                'week': week,
-                'replace': replaceEles[id].value,
-                'pHup': up,
-                'pHdown': down,
-                'calmag': calmag
-            };
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/post/post_record", true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify(data));
-        }
-    } else {
-        var data = {
-            "id": postPlantEle.value,
-            "gal": gal,
-            "percent": percent,
-            "week": week,
-            "replace": replaceSingleEle.value,
-            "pHup": pHupEle.value,
-            "pHdown": pHdownEle.value,
-            "calmag": calmag
-        };
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/post/post_record", true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(data));
-    }
 }
 
 function add_ml(value) {

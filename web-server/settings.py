@@ -1,9 +1,10 @@
+import json
 import os
 import os.path as path
 import sys
 
-from .database import get_current_names
-from .json_io import read_current_plants
+
+CURRENT_PLANT_PATH = 'current.json'
 
 
 class _Settings:
@@ -17,15 +18,22 @@ class _Settings:
 settings = _Settings()
 
 
+def read_current_plants():
+    """Returns a list containing nids of the current plants."""
+    with open(path.join(settings.db_path, CURRENT_PLANT_PATH), 'r') as f:
+        return json.loads(f.read())
+
+
 def get_db_path():
     """Reads from the environment variable 'GROW_DATA_PATH' into settings."""
-    settings.db_path = path.expanduser(os.getenv("GROW_DATA_PATH"))
+    settings.db_path = path.expanduser(os.getenv("GROW_PATH"))
     if settings.db_path == None:
         print('GROW_PATH environment variable needs to be set to the database path.')
         sys.exit(1)
 
 
 def update_current():
+    from .database import get_current_names
     settings.current_plants = read_current_plants()
     settings.current_names = get_current_names()
 
