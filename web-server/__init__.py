@@ -12,7 +12,7 @@ from .settings import settings
 
 settings.data_path = getenv("GROW_DATA_PATH")
 if settings.data_path is None:
-    settings.data_path = expanduser('~/.test_grow_data')
+    settings.data_path = expanduser(getenv('GROW_PATH'))
 
 with open(join(settings.data_path, 'current.json'), 'r') as f:
     d = f.read()
