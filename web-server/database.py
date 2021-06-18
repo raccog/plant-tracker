@@ -1,12 +1,12 @@
-from os.path import join
-from time import time
+import os.path as path
+import time
 import sqlite3
 
 from .settings import settings
 
 
 def _open_db(f):
-    con = sqlite3.connect(join(settings.data_path, f))
+    con = sqlite3.connect(path.join(settings.db_path, f))
     cur = con.cursor()
     return (con, cur)
 
@@ -19,8 +19,6 @@ def _nutrient_db(nid):
     return _open_db(f'nutrients/{str(nid).zfill(3)}.db')
 
 
-
-
 def add_data(d1, d2):
     con = sqlite3.connect('test.db')
     cur = con.cursor()
@@ -30,12 +28,10 @@ def add_data(d1, d2):
     con.close()
 
 
-
-
-
-def get_current_names(current_plants):
+def get_current_names():
     (con, cur) = _id_db()
-    names = cur.execute('select * from names where nid in (?, ?)', tuple(current_plants)).fetchall()
+    names = cur.execute('select * from names where nid in (?, ?)',
+                        tuple(settings.current_plants)).fetchall()
     con.close()
     return names
 
@@ -50,7 +46,7 @@ def add_record(nid, record):
 def new_plants(plant_names):
     (con, cur) = _id_db()
     nids = []
-    
+
     # add names and groups
     prevlen = cur.execute("select max(nid) from names").fetchone()[0] + 1
     gid = cur.execute("select max(gid) from groups").fetchone()[0] + 1
@@ -59,7 +55,7 @@ def new_plants(plant_names):
         cur.execute("insert into names values (?, ?)", (nid, plant_names[i]))
         cur.execute("insert into groups values (?, ?)", (nid, gid))
         nids.append(nid)
-    
+
     con.commit()
     con.close()
 
@@ -81,7 +77,7 @@ def create_db(nid):
 
 def new_event(nid, text):
     (con, cur) = _nutrient_db(nid)
-    timestamp = time()
+    timestamp = time.time()
     cur.execute('insert into events values (?, ?)', (timestamp, text))
     con.commit()
     con.close()
