@@ -5,7 +5,7 @@ from flask import Flask, render_template, request
 from .database import add_data, add_record, new_plants, create_db, new_event
 from .file_edit import write_current_plants
 from .json_sql import pull_nutrients
-from .settings import init_settings, settings
+from .settings import init_settings, settings, update_current
 
 
 init_settings()
@@ -77,5 +77,6 @@ def grow_post():
     write_current_plants(nids)
     for nid in nids:
         create_db(nid)
+    update_current()
 
     return ''
