@@ -60,11 +60,12 @@ var onNoShareEles = document.querySelectorAll(".onNoShare");
 var week = weekEle.value;
 var percent = parseInt(percentEle.value) / 100.0;
 var gal = parseInt(galEle.value);
-var calmag = calmagEle.value;
+var calmag = calmagEle.checked;
 
 var split = true;
 var share = false;
 var replaceSingle = false;
+var replace = false;
 
 const labels = ['micro', 'veg', 'bloom', 'guard', 'calmag'];
 var outputEles = [];
@@ -171,6 +172,10 @@ function updateVisibility() {
     }
 }
 
+function updateShareReplace(value) {
+    replace = value;
+}
+
 function postData(data) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -196,11 +201,13 @@ function postPlant() {
             var g = gal;
             var up = pHupEle.value;
             var down = pHdownEle.value;
+            var r = replace;
             if (!share) {
                 var p = percentageEles[id].value * 0.01;
                 g *= p;
                 up *= p;
                 down *= p;
+                r = replaceEles[id].checked;
             }
 
             data = {
@@ -208,7 +215,7 @@ function postPlant() {
                 'gal': g,
                 'percent': percent,
                 'week': week,
-                'replace': replaceEles[id].value,
+                'replace': r,
                 'pHup': up,
                 'pHdown': down,
                 'calmag': calmag
@@ -220,7 +227,7 @@ function postPlant() {
             "gal": gal,
             "percent": percent,
             "week": week,
-            "replace": replaceSingleEle.value,
+            "replace": replaceSingleEle.checked,
             "pHup": pHupEle.value,
             "pHdown": pHdownEle.value,
             "calmag": calmag
