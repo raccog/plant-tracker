@@ -2,7 +2,6 @@ import json
 import os
 from pathlib import Path
 
-from .file_edit import read_current_plants
 from .log_meta import *
 
 
@@ -36,6 +35,7 @@ def get_db_path():
 
 def update_current():
     from .database import get_current_names
+    from .file_edit import read_current_plants
     settings.current_plants = read_current_plants()
     settings.current_names = get_current_names()
 
