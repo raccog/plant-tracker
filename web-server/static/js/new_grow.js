@@ -4,6 +4,17 @@ var msg = document.getElementById("msg");
 
 function postPlants(plants) {
     var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                msg.style.color = 'green';
+                msg.textContent = 'New grow was set';
+            } else {
+                msg.style.color = 'red';
+                msg.textContent = 'Setting a new grow returned an error';
+            }
+        }
+    }
     xhr.open("POST", "/post/new_grow", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(plants));
@@ -17,7 +28,7 @@ function onSubmit() {
         + t0 + ' and ' + t1 + '? This cannot be undone in a GUI yet.')) {
         postPlants([t0, t1]);
         msg.style.color = 'green';
-        msg.textContent = 'New grow was set';
+        msg.textContent = 'New grow was sent to database';
     } else {
         msg.style.color = 'red';
         msg.textContent = 'Process to set a new grow was cancelled.';

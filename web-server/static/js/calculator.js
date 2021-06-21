@@ -109,6 +109,7 @@ function add_ml(value) {
 }
 
 function updateCalculation() {
+    errorEle.style.color = 'red';
     if (nutrient_schedule[week] == null) {
         errorEle.textContent = 'Invalid week';
     } else {

@@ -1,4 +1,4 @@
-from time import time
+from time import time, sleep
 import json
 from flask import Flask, render_template, request
 
@@ -79,4 +79,4 @@ def grow_post():
         create_db(nid)
     update_current()
 
-    return ''
+    return '', 200
