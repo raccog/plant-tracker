@@ -1,9 +1,12 @@
 import json
 import os
-import os.path as path
-import sys
+from pathlib import Path
+
+from .file_edit import read_current_plants
+from .log_meta import *
 
 
+logger = get_debug_logger(__name__)
 CURRENT_PLANT_PATH = 'current.json'
 
 
@@ -19,19 +22,16 @@ class _Settings:
 settings = _Settings()
 
 
-def read_current_plants():
-    """Returns a list containing nids of the current plants."""
-    with open(path.join(settings.db_path, CURRENT_PLANT_PATH), 'r') as f:
-        return json.loads(f.read())
-
-
 def get_db_path():
     """Reads from the environment variable 'GROW_DATA_PATH' into settings."""
-    settings.db_path = path.expanduser(os.getenv("GROW_PATH"))
+    settings.db_path = os.getenv("GROW_PATH")
     if settings.db_path == None:
-        print('GROW_PATH environment variable needs to be set to the database path.')
-        sys.exit(1)
-    settings.current_plant_path = path.join(settings.db_path, CURRENT_PLANT_PATH)
+        settings.db_path = '~/.grow_data'
+    settings.db_path = Path(settings.db_path).expanduser()
+    if not settings.db_path.is_dir():
+        logger.critical(f'Grow data path is not a valid directory: {settings.db_path}')
+        return
+    settings.current_plant_path = Path(settings.db_path).joinpath(CURRENT_PLANT_PATH)
 
 
 def update_current():
