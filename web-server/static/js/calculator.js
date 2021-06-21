@@ -100,6 +100,7 @@ function updateSplit(value) {
     split = value;
     if (!split) {
         share = false;
+        shareEle.checked = false;
     }
     updateVisibility();
 }
@@ -197,6 +198,7 @@ function postData(data) {
 function postPlant() {
     var data;
     if (split) {
+        data = [];
         for (let id of current_plants) {
             var g = gal;
             var up = pHupEle.value;
@@ -204,13 +206,13 @@ function postPlant() {
             var r = replace;
             if (!share) {
                 var p = percentageEles[id].value * 0.01;
-                g *= p;
-                up *= p;
-                down *= p;
+                g = (g * p).toPrecision(3);
+                up = (up * p).toPrecision(3);
+                down = (down * p).toPrecision(3);
                 r = replaceEles[id].checked;
             }
 
-            data = {
+            data.push({
                 'id': id,
                 'gal': g,
                 'percent': percent,
@@ -219,7 +221,7 @@ function postPlant() {
                 'pHup': up,
                 'pHdown': down,
                 'calmag': calmag
-            };
+            });
         }
     } else {
         data = {
@@ -234,13 +236,25 @@ function postPlant() {
         };
     }
 
-    if (confirm('Do you want to post this record to nid' + (split ? 's' : '')
-        + ': ' + (split ? current_plants.toString() : data['id']) +
-        '?\nData:\n\nWeek: ' + data['week'] + '\nGallons: ' + data['gal'] +
-        'gal\nPercentage: ' + (data['percent'] * 100) + '\%\nReplace: ' + data['replace'] +
-        '\npH Up: ' + data['pHup'] + 'mL\npH Down: ' + data['pHdown'] +
-        'mL\nCalMag: ' + data['calmag'])) {
-            postData(data);
+    var confirmMsg = 'Do you want to post this record to nid' + (split ? 's' : '') + ": " + (split ? current_plants.toString() : data['id']) + '?';
+    if (Array.isArray(data)) {
+        for (let d of data) {
+            confirmMsg += '\n' + d['id'] + ':\n\nWeek: ' + d['week'] + '\nGallons: ' + d['gal'] +
+            'gal\nPercentage: ' + (d['percent'] * 100) + '\%\nReplace: ' + d['replace'] +
+            '\npH Up: ' + d['pHup'] + 'mL\npH Down: ' + d['pHdown'] +
+            'mL\nCalMag: ' + d['calmag'] + '\n\n';
+        }
+    } else {
+        confirmMsg += '\n\nWeek: ' + data['week'] + '\nGallons: ' + data['gal'] + 'gal\nPercentage: ' + (data['percent'] * 100) + '\%\nReplace: ' + data['replace'] + '\npH Up: ' + data['pHup'] + 'mL\npH Down: ' + data['pHdown'] + 'mL\nCalMag: ' + data['calmag'];
+    }
+    if (confirm(confirmMsg)) {
+            if (Array.isArray(data)) {
+                for (let d of data) {
+                    postData(d);
+                }
+            } else {
+                postData(data);
+            }
             postErrorEle.style.color = 'green';
             postErrorEle.textContent = 'Record was sent to database'
     } else {
