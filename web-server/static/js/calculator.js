@@ -16,10 +16,16 @@ url = "get/current.json";
 var current_plants;
 var percentageEles = {};
 var replaceEles = {};
+var errorEle = document.getElementById('error');
 
 xhr.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-        current_plants = JSON.parse(this.responseText);
+        try {
+            current_plants = JSON.parse(this.responseText);
+        } catch(e) {
+            errorEle.textContent = 'Received invalid current plants data';
+            return;
+        }
         for (var i = 0; i < current_plants.length; ++i) {
             var id = current_plants[i];
             percentageEles[id] = document.getElementById('percentage-' + id);
@@ -31,7 +37,6 @@ xhr.open("GET", url, true);
 xhr.send();
 
 var postErrorEle = document.getElementById('msg');
-var errorEle = document.getElementById('error');
 var weekEle = document.getElementById('week');
 var percentEle = document.getElementById('percent');
 var galEle = document.getElementById('gal');
@@ -105,10 +110,16 @@ function add_ml(value) {
 
 function updateCalculation() {
     if (nutrient_schedule[week] == null) {
-        errorEle.textContent = 'Week error';
+        errorEle.textContent = 'Invalid week';
     } else {
-        errorEle.textContent = '';
         var calc = nutrient_schedule[week].slice();
+        if (calc.length != 4) {
+            errorEle.textContent = 'Nutrient schedule for week ' + week + ' is invalid: ' + calc.toString();
+            for (let ele of outputEles) {
+                ele.textContent = 'Null';
+            }
+            return;
+        }
         for (var i = 0; i < calc.length; ++i) {
             calc[i] *= (percent * gal).toFixed(3);
         }

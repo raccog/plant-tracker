@@ -9,6 +9,10 @@
             color: 'green';
             font-size: 20px;
           }
+          #error {
+            color: 'red';
+            font-size: 20px;
+          }
         </style>
     </head>
     <body>
@@ -41,7 +45,7 @@
           <label for="calmag">calmag?</label>
           <input type="checkbox" name="calmag" id="calmag?" checked onchange="updatecalmag(this.checked)">
         </div>
-        <p id="error">Input Error</p>
+        <p id="error" name="error"></p>
         <table>
           <tr>
             <td>FloraMicro</td>
