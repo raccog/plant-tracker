@@ -90,8 +90,13 @@
         <div class="onNoSplit">
           <label for="share">Share?</label>
           <input type="checkbox" name="share" id="share" onchange="updateShare(this.checked)">
+          <div class="onShare">
+            <label for="shareReplace">Replace?</label>
+            <input type="checkbox" name="shareReplace" id="shareReplace" onchange="updateShareReplace(this.checked)">
+          </div>
         </div>
-        {% for id, name in current_names %}
+        <div class="onNoShare">
+          {% for id, name in current_names %}
             <div class="onNoSplit">
               <h3>{{ name }}</h3>
               <label for="percentage-{{ id }}">Percentage</label>
@@ -99,7 +104,8 @@
               <label for="replace-{{ id }}">Replace?</label>
               <input class="splitPlants" type="checkbox" name="replace-{{ id }}" id="replace-{{ id }}">
             </div>
-        {% endfor %}
+          {% endfor %}
+        </div>
         <button type="button" onclick="postPlant()">Submit Record</button>
         <script src={{ url_for('static', filename='js/calculator.js') }} text="/text/javascript"></script>
     </body>

@@ -54,6 +54,9 @@ var shareEle = document.getElementById('share');
 var onSplitEles = document.querySelectorAll(".onSplit");
 var onNoSplitEles = document.querySelectorAll(".onNoSplit");
 
+var onShareEles = document.querySelectorAll(".onShare");
+var onNoShareEles = document.querySelectorAll(".onNoShare");
+
 var week = weekEle.value;
 var percent = parseInt(percentEle.value) / 100.0;
 var gal = parseInt(galEle.value);
@@ -70,6 +73,7 @@ for (var i = 0; i < labels.length; ++i) {
 }
 
 updateVisibility();
+updateShare();
 
 function updateWeek(value) {
     week = value;
@@ -93,11 +97,29 @@ function updatecalmag(value) {
 
 function updateSplit(value) {
     split = value;
+    if (!split) {
+        share = false;
+    }
     updateVisibility();
 }
 
 function updateShare(value) {
     share = value;
+    
+    for (let ele of onShareEles) {
+        if (share) {
+            ele.style.visibility = 'inherit';
+        } else {
+            ele.style.visibility = 'hidden';
+        }
+    }
+    for (let ele of onNoShareEles) {
+        if (!share) {
+            ele.style.visibility = 'inherit';
+        } else {
+            ele.style.visibility = 'hidden';
+        }
+    }
 }
 
 function updateReplaceSingle(value) {
@@ -137,20 +159,31 @@ function updateVisibility() {
         if (split) {
             ele.style.visibility = 'hidden';
         } else {
-            ele.style.visibility = 'visible';
+            ele.style.visibility = 'inherit';
         }
     }
     for (let ele of onNoSplitEles) {
         if (!split) {
             ele.style.visibility = 'hidden';
         } else {
-            ele.style.visibility = 'visible';
+            ele.style.visibility = 'inherit';
         }
     }
 }
 
 function postData(data) {
     var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                msg.style.color = 'green';
+                msg.textContent = 'Record was posted to database';
+            } else {
+                msg.style.color = 'red';
+                msg.textContent = 'Submitting a record returned an error';
+            }
+        }
+    }
     xhr.open("POST", "/post/new_record", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(data));
@@ -202,7 +235,7 @@ function postPlant() {
         'mL\nCalMag: ' + data['calmag'])) {
             postData(data);
             postErrorEle.style.color = 'green';
-            postErrorEle.textContent = 'Record was successfully posted'
+            postErrorEle.textContent = 'Record was sent to database'
     } else {
         postErrorEle.style.color = 'red';
         postErrorEle.textContent = 'Posting this record was cancelled'
