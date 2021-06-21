@@ -10,6 +10,7 @@ CURRENT_PLANT_PATH = 'current.json'
 class _Settings:
     def __init__(self):
         self.db_path = None
+        self.current_plant_path = None
         self.current_plants = None
         self.current_names = None
 
@@ -30,6 +31,7 @@ def get_db_path():
     if settings.db_path == None:
         print('GROW_PATH environment variable needs to be set to the database path.')
         sys.exit(1)
+    settings.current_plant_path = path.join(settings.db_path, CURRENT_PLANT_PATH)
 
 
 def update_current():
