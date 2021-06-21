@@ -1,4 +1,4 @@
-import os.path as path
+from pathlib import Path
 import time
 import sqlite3
 
@@ -6,7 +6,8 @@ from .settings import settings
 
 
 def _open_db(f):
-    con = sqlite3.connect(path.join(settings.db_path, f))
+    db_path = Path(settings.db_path).joinpath(f)
+    con = sqlite3.connect(db_path)
     cur = con.cursor()
     return (con, cur)
 
