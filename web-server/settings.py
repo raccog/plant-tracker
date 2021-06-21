@@ -29,7 +29,7 @@ def get_db_path():
         settings.db_path = '~/.grow_data'
     settings.db_path = Path(settings.db_path).expanduser()
     if not settings.db_path.is_dir():
-        logger.critical(f'Grow data path is not a valid directory: {settings.db_path}')
+        logger.critical(f'Grow data is not a valid directory at path: {settings.db_path}')
         return
     settings.current_plant_path = Path(settings.db_path).joinpath(CURRENT_PLANT_PATH)
 
