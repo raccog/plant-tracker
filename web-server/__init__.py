@@ -67,7 +67,7 @@ def event_post():
     for nid in event['nids']:
         new_event(nid, event['text'])
 
-    return ''
+    return '', 200
 
 
 @app.route("/post/new_grow", methods=["POST"])
