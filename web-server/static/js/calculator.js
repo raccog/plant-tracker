@@ -1,215 +1,175 @@
-var xhr = new XMLHttpRequest();
-var url = "get/nutrients.json";
-var nutrient_schedule;
+// Data from server
+let nutrient_schedule, current_plants;
 
-xhr.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        nutrient_schedule = JSON.parse(this.responseText)[0];
-        updateCalculation();
-    }
-};
-xhr.open("GET", url, true);
-xhr.send();
+// DOM elements
+// Inputs
+const inpPercentages = {};
+const inpWeek = document.getElementById('week');
+const inpPercent = document.getElementById('percent');
+const inpGal = document.getElementById('gal');
+const inpphUp = document.getElementById('pHup');
+const inpphDown = document.getElementById('pHdown');
+const inpPlant = document.getElementById('plant');
+// Checkboxes
+const checkReplaces = {};
+const checkSplit = document.getElementById('split');
+const checkShare = document.getElementById('share');
+const checkReplaceSingle = document.getElementById('replaceSingle');
+const checkReplaceShare = document.getElementById('replaceShare');
+const checkCalmag = document.getElementById('calmag?');
+// Text
+const textOutputs = {};
+// Groups for visibility
+const allOnSplit = document.querySelectorAll(".onSplit");
+const allOnNoSplit = document.querySelectorAll(".onNoSplit");
+const allOnShare = document.querySelectorAll(".onShare");
+const allOnNoShare = document.querySelectorAll(".onNoShare");
 
-xhr = new XMLHttpRequest();
-url = "get/current.json";
-var current_plants;
-var percentageEles = {};
-var replaceEles = {};
-var errorEle = document.getElementById('error');
+// Page state
+let split = checkSplit.checked;
+let share = checkShare.checked;
+let replaceSingle = checkReplaceSingle.checked;
+let replaceShare = checkReplaceShare.checked;
+let week = inpWeek.value;
+let percent = parseInt(inpPercent.value);
+let gal = parseInt(inpGal.value);
+let calmag = checkCalmag.checked;
 
-xhr.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        try {
-            current_plants = JSON.parse(this.responseText);
-        } catch(e) {
-            errorEle.textContent = 'Received invalid current plants data';
-            return;
-        }
-        for (var i = 0; i < current_plants.length; ++i) {
-            var id = current_plants[i];
-            percentageEles[id] = document.getElementById('percentage-' + id);
-            replaceEles[id] = document.getElementById('replace-' + id);
-        }
-    }
-}
-xhr.open("GET", url, true);
-xhr.send();
-
-var postErrorEle = document.getElementById('msg');
-var weekEle = document.getElementById('week');
-var percentEle = document.getElementById('percent');
-var galEle = document.getElementById('gal');
-var calmagEle = document.getElementById('calmag?');
-
-var pHupEle = document.getElementById('pHup');
-var pHdownEle = document.getElementById('pHdown');
-var postPlantEle = document.getElementById('postPlant');
-var replaceSingleEle = document.getElementById('replaceSingle');
-var shareEle = document.getElementById('share');
-
-var splitEle = document.getElementById('split');
-var shareEle = document.getElementById('share');
-
-var onSplitEles = document.querySelectorAll(".onSplit");
-var onNoSplitEles = document.querySelectorAll(".onNoSplit");
-
-var onShareEles = document.querySelectorAll(".onShare");
-var onNoShareEles = document.querySelectorAll(".onNoShare");
-
-var week = weekEle.value;
-var percent = parseInt(percentEle.value) / 100.0;
-var gal = parseInt(galEle.value);
-var calmag = calmagEle.checked;
-
-var split = true;
-var share = false;
-var replaceSingle = false;
-var replace = false;
-
-const labels = ['micro', 'veg', 'bloom', 'guard', 'calmag'];
-var outputEles = [];
-for (var i = 0; i < labels.length; ++i) {
-    outputEles[i] = document.getElementById(labels[i]);
+// Callbacks
+function pullNutrientSchedule(responseText) {
+    nutrient_schedule = tryParseJSON(responseText);
+    calculate();
 }
 
-updateVisibility();
-updateShare();
+function pullCurrentPlants(responseText) {
+    current_plants = tryParseJSON(responseText);
+    if (current_plants == null) return;
+
+    for (let id of current_plants) {
+        inpPercentages[id] = document.getElementById('percentage-' + id);
+        checkReplaces[id] = document.getElementById('replace-' + id);
+    }
+}
 
 function updateWeek(value) {
     week = value;
-    updateCalculation();
+    calculate();
 }
 
 function updatePercent(value) {
-    percent = parseInt(value) / 100.0;
-    updateCalculation();
+    percent = parseInt(value);
+    calculate();
 }
 
 function updateGal(value) {
     gal = parseInt(value);
-    updateCalculation();
+    calculate();
 }
 
 function updatecalmag(value) {
     calmag = value;
-    updateCalculation();
+    calculate();
 }
 
 function updateSplit(value) {
     split = value;
     if (!split) {
         share = false;
-        shareEle.checked = false;
+        checkShare.checked = false;
     }
-    updateVisibility();
+    splitVisibility();
 }
 
 function updateShare(value) {
     share = value;
-    
-    for (let ele of onShareEles) {
-        if (share) {
-            ele.style.visibility = 'inherit';
-        } else {
-            ele.style.visibility = 'hidden';
-        }
-    }
-    for (let ele of onNoShareEles) {
-        if (!share) {
-            ele.style.visibility = 'inherit';
-        } else {
-            ele.style.visibility = 'hidden';
-        }
-    }
+    shareVisibility();
 }
 
 function updateReplaceSingle(value) {
     replaceSingle = value;
 }
 
+function updateShareReplace(value) {
+    replaceShare = value;
+}
+
+// Get requests
+getRequest('/get/nutrients.json', pullNutrientSchedule, retrieveErrorMsg('nutrient schedule'));
+getRequest('/get/current.json', pullCurrentPlants, retrieveErrorMsg('current plants'))
+
+const labels = ['micro', 'veg', 'bloom', 'guard', 'calmag'];
+for (let label of labels) {
+    textOutputs[label] = document.getElementById(label);
+}
+splitVisibility();
+shareVisibility();
+
+// Page functions
+function shareVisibility() {
+    for (let ele of allOnShare) {
+        ele.style.visibility = visibilityChange(share);
+    }
+    for (let ele of allOnNoShare) {
+        ele.style.visibility = visibilityChange(!share);
+    }
+}
+
+function splitVisibility() {
+    for (let ele of allOnSplit) {
+        ele.style.visibility = visibilityChange(!split);
+    }
+    for (let ele of allOnNoSplit) {
+        ele.style.visibility = visibilityChange(split);
+    }
+}
+
 function add_ml(value) {
     return value.toString() + 'ml';
 }
 
-function updateCalculation() {
-    errorEle.style.color = 'red';
-    if (nutrient_schedule[week] == null) {
-        errorEle.textContent = 'Invalid week';
-    } else {
-        var calc = nutrient_schedule[week].slice();
-        if (calc.length != 4) {
-            errorEle.textContent = 'Nutrient schedule for week ' + week + ' is invalid: ' + calc.toString();
-            for (let ele of outputEles) {
-                ele.textContent = 'Null';
-            }
-            return;
+function calculate() {
+    if (nutrient_schedule == null) return;
+
+    const calc = nutrient_schedule[week].slice();
+    if (calc.length != 4) {
+        restError('Nutrient schedule for week ' + week + ' is invalid: ' + calc.toString())
+        for (let ele of textOutputs) {
+            ele.textContent = 'Null';
         }
-        for (var i = 0; i < calc.length; ++i) {
-            calc[i] *= (percent * gal).toFixed(3);
-        }
-        for (var i = 0; i < 3; ++i) {
-            outputEles[i].textContent = add_ml(calc[i]);
-        }
-        outputEles[3].textContent = add_ml(gal * 2);
-        outputEles[4].textContent = add_ml(calmag ? calc[3] : 0);
+        return;
     }
+
+    // Multiply by gallons and percent
+    for (var i = 0; i < calc.length; ++i) {
+        calc[i] *= (percent * gal / 100.0).toFixed(3);
+    }
+    // Output calculation to user
+    for (let i = 0; i < 3; ++i) {
+        textOutputs[labels[i]].textContent = add_ml(calc[i]);
+    }
+    textOutputs[labels[3]].textContent = add_ml(gal * 2);
+    textOutputs[labels[4]].textContent = add_ml(calmag ? calc[3] : 0);
 }
 
-function updateVisibility() {
-    for (let ele of onSplitEles) {
-        if (split) {
-            ele.style.visibility = 'hidden';
-        } else {
-            ele.style.visibility = 'inherit';
-        }
-    }
-    for (let ele of onNoSplitEles) {
-        if (!split) {
-            ele.style.visibility = 'hidden';
-        } else {
-            ele.style.visibility = 'inherit';
-        }
-    }
-}
-
-function updateShareReplace(value) {
-    replace = value;
-}
-
-function postData(data) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        if (this.readyState == 4) {
-            if (this.status == 200) {
-                msg.style.color = 'green';
-                msg.textContent = 'Record was posted to database';
-            } else {
-                msg.style.color = 'red';
-                msg.textContent = 'Submitting a record returned an error';
-            }
-        }
-    }
-    xhr.open("POST", "/post/new_record", true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify(data));
+function postRecord(data) {
+    postRequest('/post/new_record', data, 'Record was posted to database', 'Submitting a record returned an error');
 }
 
 function postPlant() {
-    var data;
+    let data;
     if (split) {
         data = [];
         for (let id of current_plants) {
-            var g = gal;
-            var up = pHupEle.value;
-            var down = pHdownEle.value;
-            var r = replace;
+            let g = gal;
+            let up = inpphUp.value;
+            let down = inpphDown.value;
+            let r = replaceShare;
             if (!share) {
-                var p = percentageEles[id].value * 0.01;
+                const p = inpPercentages[id].value * 0.01;
                 g = (g * p).toPrecision(3);
                 up = (up * p).toPrecision(3);
                 down = (down * p).toPrecision(3);
-                r = replaceEles[id].checked;
+                r = checkReplaces[id].checked;
             }
 
             data.push({
@@ -225,13 +185,13 @@ function postPlant() {
         }
     } else {
         data = {
-            "id": postPlantEle.value,
+            "id": inpPlant.value,
             "gal": gal,
             "percent": percent,
             "week": week,
-            "replace": replaceSingleEle.checked,
-            "pHup": pHupEle.value,
-            "pHdown": pHdownEle.value,
+            "replace": checkReplaceSingle.checked,
+            "pHup": inpphUp.value,
+            "pHdown": inpphDown.value,
             "calmag": calmag
         };
     }
@@ -240,25 +200,23 @@ function postPlant() {
     if (Array.isArray(data)) {
         for (let d of data) {
             confirmMsg += '\n' + d['id'] + ':\n\nWeek: ' + d['week'] + '\nGallons: ' + d['gal'] +
-            'gal\nPercentage: ' + (d['percent'] * 100) + '\%\nReplace: ' + d['replace'] +
+            'gal\nPercentage: ' + d['percent'] + '\%\nReplace: ' + d['replace'] +
             '\npH Up: ' + d['pHup'] + 'mL\npH Down: ' + d['pHdown'] +
             'mL\nCalMag: ' + d['calmag'] + '\n\n';
         }
     } else {
-        confirmMsg += '\n\nWeek: ' + data['week'] + '\nGallons: ' + data['gal'] + 'gal\nPercentage: ' + (data['percent'] * 100) + '\%\nReplace: ' + data['replace'] + '\npH Up: ' + data['pHup'] + 'mL\npH Down: ' + data['pHdown'] + 'mL\nCalMag: ' + data['calmag'];
+        confirmMsg += '\n\nWeek: ' + data['week'] + '\nGallons: ' + data['gal'] + 'gal\nPercentage: ' + data['percent'] + '\%\nReplace: ' + data['replace'] + '\npH Up: ' + data['pHup'] + 'mL\npH Down: ' + data['pHdown'] + 'mL\nCalMag: ' + data['calmag'];
     }
     if (confirm(confirmMsg)) {
             if (Array.isArray(data)) {
                 for (let d of data) {
-                    postData(d);
+                    postRecord(d);
                 }
             } else {
-                postData(data);
+                postRecord(data);
             }
-            postErrorEle.style.color = 'green';
-            postErrorEle.textContent = 'Record was sent to database'
+            restSuccess('Record was sent to database');
     } else {
-        postErrorEle.style.color = 'red';
-        postErrorEle.textContent = 'Posting this record was cancelled'
+        restError('Posting this record was cancelled');
     }
 }

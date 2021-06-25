@@ -20,7 +20,7 @@ def pull_nutrients():
     cur = con.cursor()
 
     try:
-        return json.dumps([{row[0]: list(row[1:]) for row in cur.execute("select * from schedule")}])
+        return json.dumps({row[0]: list(row[1:]) for row in cur.execute("select * from schedule")})
     except DatabaseError:
         logger.critical(f'Nutrient database is not a valid sqlite3 database at path: {nutrient_db}')
         return None

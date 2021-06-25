@@ -54,8 +54,7 @@ def record_post():
     data = request.get_json()
     assert(int(data['id']) in [x[0] for x in settings.current_names])
     now = time()
-    record = (now, data['gal'], data['replace'], data['percent'] *
-              100, data['week'], data['pHup'], data['pHdown'], data['calmag'])
+    record = (now, data['gal'], data['replace'], data['percent'], data['week'], data['pHup'], data['pHdown'], data['calmag'])
     add_record(data['id'], record)
 
     return ''
