@@ -82,3 +82,11 @@ def new_event(nid, text):
     cur.execute('insert into events values (?, ?)', (timestamp, text))
     con.commit()
     con.close()
+
+
+def new_comment(nid, text):
+    (con, cur) = _nutrient_db(nid)
+    timestamp = time.time()
+    cur.execute('insert into comments values (?, ?)', (timestamp, text))
+    con.commit()
+    con.close()

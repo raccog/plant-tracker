@@ -1,8 +1,9 @@
+from sqlite3.dbapi2 import complete_statement
 from time import time, sleep
 import json
 from flask import Flask, render_template, request
 
-from .database import add_data, add_record, new_plants, create_db, new_event
+from .database import add_data, add_record, new_plants, create_db, new_event, new_comment
 from .file_edit import write_current_plants
 from .json_sql import pull_nutrients
 from .settings import init_settings, settings, update_current
@@ -32,6 +33,11 @@ def calculator_page():
 @app.route("/new_event")
 def new_event_page():
     return render_template('new_event.html', current_names=settings.current_names)
+
+
+@app.route("/new_comment")
+def new_comment_page():
+    return render_template('new_comment.html', current_names=settings.current_names)
 
 
 @app.route("/new_grow")
@@ -65,6 +71,15 @@ def event_post():
     event = request.get_json()
     for nid in event['nids']:
         new_event(nid, event['text'])
+
+    return '', 200
+
+
+@app.route("/post/new_comment", methods=["POST"])
+def comment_post():
+    comment = request.get_json()
+    for nid in comment['nids']:
+        new_comment(nid, comment['text'])
 
     return '', 200
 
