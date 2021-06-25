@@ -4,22 +4,18 @@
         <meta charset="utf-8">
         <title>New Event</title>
         <a href="/">Back</a>
-        <style>
-            #msg {
-                color: "green";
-                font-size: 20px; 
-            }
-        </style>
+        <link rel="stylesheet" href={{ url_for('static', filename='css/default.css') }}>
     </head>
     <body>
         <h1>New Event</h1>
-        <p id="msg" name="msg"></p>
-        <textarea id="event" name="event" rows="5" cols="33"></textarea><br>
+        <p id="restmsg"></p>
+        <textarea id="event" name="event" rows="10" cols="64"></textarea><br>
         {% for nid, name in current_names %}
         <label for="{{ nid }}">{{ name }}</label>
         <input type="checkbox" id="{{ nid }}" name="{{ nid }}" class="check" checked>
         {% endfor %}<br>
         <button onclick="onSubmit()">Submit Event</button>
+        <script src={{ url_for('static', filename='js/common.js') }} text="/text/javascript"></script>
         <script src={{ url_for('static', filename='js/new_event.js') }} text="/text/javascript"></script>
     </body>
 </html>
