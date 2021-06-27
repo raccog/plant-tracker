@@ -1,13 +1,19 @@
 let restText = document.getElementById("restmsg");
 
-function restSuccess(msg) {
+async function restSuccess(msg) {
     restText.style.color = 'green';
     restText.textContent = msg;
+    setTimeout(() => {
+        restText.textContent = '';
+    }, 5000);
 }
 
-function restError(msg) {
+async function restError(msg) {
     restText.style.color = 'red';
     restText.textContent = msg;
+    setTimeout(() => {
+        restText.textContent = '';
+    }, 5000);
 }
 
 function retrieveErrorMsg(name) {
@@ -18,7 +24,7 @@ function visibilityChange(value) {
     return value ? 'inherit' : 'hidden';
 }
 
-function getRequest(url, callback, restmsg) {
+async function getRequest(url, callback, restmsg) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (this.readyState == 4) {
@@ -33,7 +39,7 @@ function getRequest(url, callback, restmsg) {
     xhr.send();
 }
 
-function postRequest(url, data, successMsg, errorMsg) {
+async function postRequest(url, data, successMsg, errorMsg) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (this.readyState == 4) {
@@ -49,7 +55,7 @@ function postRequest(url, data, successMsg, errorMsg) {
     xhr.send(JSON.stringify(data));
 }
 
-function tryParseJSON(json, url) {
+async function tryParseJSON(json, url) {
     let data;
     try {
         data = JSON.parse(json);
