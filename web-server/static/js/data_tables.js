@@ -5,6 +5,36 @@ const nutrient_data = {};
 // DOM elements
 // Inputs
 const inpPlant = document.getElementById('plant');
+// Table Head
+const thead = document.createElement('thead');
+{
+    const theadrow = document.createElement('tr');
+    const datehead = document.createElement('th');
+    datehead.appendChild(document.createTextNode("Timestamp"));
+    theadrow.appendChild(datehead);
+    const galhead = document.createElement('th');
+    galhead.appendChild(document.createTextNode("Gallons"));
+    theadrow.appendChild(galhead);
+    const replacehead = document.createElement('th');
+    replacehead.appendChild(document.createTextNode("Replaced"));
+    theadrow.appendChild(replacehead);
+    const percenthead = document.createElement('th');
+    percenthead.appendChild(document.createTextNode("Nutrient Strength"));
+    theadrow.appendChild(percenthead);
+    const weekhead = document.createElement('th');
+    weekhead.appendChild(document.createTextNode("Week"));
+    theadrow.appendChild(weekhead);
+    const phuphead = document.createElement('th');
+    phuphead.appendChild(document.createTextNode("pH Up"));
+    theadrow.appendChild(phuphead);
+    const phdownhead = document.createElement('th');
+    phdownhead.appendChild(document.createTextNode("pH Down"));
+    theadrow.appendChild(phdownhead);
+    const calmaghead = document.createElement('th');
+    calmaghead.appendChild(document.createTextNode("CalMag"));
+    theadrow.appendChild(calmaghead);
+    thead.appendChild(theadrow);
+}
 
 // Page state
 let selected_plant = inpPlant.value;
@@ -60,6 +90,7 @@ function replaceTable(id) {
     }
 
     const oldTable = document.getElementById('data_table');
+    table.appendChild(thead);
     table.appendChild(tbody);
     document.body.appendChild(table);
     oldTable.remove();

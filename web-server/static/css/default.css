@@ -6,3 +6,18 @@
     color: 'red';
     font-size: 20px;
 }
+
+table,
+td,
+thead,
+th,
+tfoot {
+    border: 1px solid rgb(63, 63, 63);
+    border-collapse: collapse;
+}
+
+thead,
+tfoot {
+    background-color: rgb(181, 250, 244);
+    color: rgb(27, 27, 27);
+}
