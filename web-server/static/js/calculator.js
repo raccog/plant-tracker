@@ -95,8 +95,9 @@ function updateShareReplace(value) {
 
 // Get requests
 getRequest('/get/nutrients.json', pullNutrientSchedule, retrieveErrorMsg('nutrient schedule'));
-getRequest('/get/current.json', pullCurrentPlants, retrieveErrorMsg('current plants'))
+getRequest('/get/current.json', pullCurrentPlants, retrieveErrorMsg('current plants'));
 
+// Setup
 const labels = ['micro', 'veg', 'bloom', 'guard', 'calmag'];
 for (let label of labels) {
     textOutputs[label] = document.getElementById(label);

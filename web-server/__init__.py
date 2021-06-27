@@ -5,7 +5,7 @@ from flask import Flask, render_template, request
 
 from .database import add_data, add_record, new_plants, create_db, new_event, new_comment
 from .file_edit import write_current_plants
-from .json_sql import pull_nutrients
+from .json_sql import pull_nutrient_schedule, pull_plant_nutrients
 from .settings import init_settings, settings, update_current
 
 
@@ -51,13 +51,21 @@ def data_tables_page():
 
 
 @app.route("/get/nutrients.json")
-def nutrients_data():
-    return pull_nutrients()
+def nutrient_schedule_data():
+    return pull_nutrient_schedule()
 
 
 @app.route("/get/current.json")
 def current_data():
     return json.dumps([str(x) for x in settings.current_plants])
+
+
+@app.route("/get/nutrient_<id>.json")
+def plant_nutrient_data(id):
+    data = pull_plant_nutrients(id)
+    if data is None:
+        return '', 404
+    return data, 200
 
 
 @app.route("/post/new_record", methods=["POST"])

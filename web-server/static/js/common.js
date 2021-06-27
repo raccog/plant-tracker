@@ -55,7 +55,7 @@ async function postRequest(url, data, successMsg, errorMsg) {
     xhr.send(JSON.stringify(data));
 }
 
-async function tryParseJSON(json, url) {
+function tryParseJSON(json, url) {
     let data;
     try {
         data = JSON.parse(json);

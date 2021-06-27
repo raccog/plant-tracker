@@ -7,12 +7,15 @@ from .log_meta import *
 
 logger = get_debug_logger(__name__)
 CURRENT_PLANT_PATH = 'current.json'
+NUTRIENT_SCHEDULE_PATH = 'NUTRIENT-SCHEDULE.db'
 
 
 class _Settings:
     def __init__(self):
         self.db_path = None
+        self.nutrient_db_path = None
         self.current_plant_path = None
+        self.nutrient_schedule_path = None
         self.current_plants = None
         self.current_names = None
 
@@ -31,6 +34,8 @@ def get_db_path():
         logger.critical(f'Grow data is not a valid directory at path: {settings.db_path}')
         return
     settings.current_plant_path = Path(settings.db_path).joinpath(CURRENT_PLANT_PATH)
+    settings.nutrient_schedule_path = Path(settings.db_path).joinpath(NUTRIENT_SCHEDULE_PATH)
+    settings.nutrient_db_path = Path(settings.db_path).joinpath('nutrients')
 
 
 def update_current():
