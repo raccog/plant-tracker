@@ -45,6 +45,11 @@ def new_grow_page():
     return render_template('new_grow.html')
 
 
+@app.route("/data_tables")
+def data_tables_page():
+    return render_template('data_tables.html', current_names=settings.current_names)
+
+
 @app.route("/get/nutrients.json")
 def nutrients_data():
     return pull_nutrients()

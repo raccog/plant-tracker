@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Data Tables</title>
+        <a href="/">Back</a>
+        <link rel="stylesheet" href={{ url_for('static', filename='css/default.css') }}>
+    </head>
+    <body>
+        <h1>Data Tables</h1>
+        <select name="plant" id="plant" value="{{ current_names[0] }}" onchange="updatePlant(this.value)">
+            {% for id, name in current_names %}
+            <option value={{ id }}>{{ name }}</option>
+            {% endfor %}
+        </select>
+        <script src={{ url_for('static', filename='js/common.js') }}></script>
+        <script src={{ url_for('static', filename='js/data_tables.js') }}></script>
+    </body>
+</html>
