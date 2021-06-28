@@ -16,8 +16,23 @@ tfoot {
     border-collapse: collapse;
 }
 
+td {
+    text-align: right;
+}
+
+tr.datarow:hover {background-color: #ddd;}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+th {
+    word-wrap: break-word;
+}
+
 thead,
 tfoot {
-    background-color: rgb(181, 250, 244);
-    color: rgb(27, 27, 27);
+    background-color: rgb(10, 163, 92);
+    color: rgb(20, 20, 20);
 }

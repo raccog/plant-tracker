@@ -1,5 +1,5 @@
 // Data from server
-let current_plants;
+let nutrient_schedule, current_plants;
 const nutrient_data = {};
 
 // DOM elements
@@ -19,19 +19,28 @@ const thead = document.createElement('thead');
     replacehead.appendChild(document.createTextNode("Replaced"));
     theadrow.appendChild(replacehead);
     const percenthead = document.createElement('th');
-    percenthead.appendChild(document.createTextNode("Nutrient Strength"));
+    percenthead.appendChild(document.createTextNode("Nutrient Strength (%)"));
     theadrow.appendChild(percenthead);
     const weekhead = document.createElement('th');
     weekhead.appendChild(document.createTextNode("Week"));
     theadrow.appendChild(weekhead);
     const phuphead = document.createElement('th');
-    phuphead.appendChild(document.createTextNode("pH Up"));
+    phuphead.appendChild(document.createTextNode("pH Up (mL)"));
     theadrow.appendChild(phuphead);
     const phdownhead = document.createElement('th');
-    phdownhead.appendChild(document.createTextNode("pH Down"));
+    phdownhead.appendChild(document.createTextNode("pH Down (mL)"));
     theadrow.appendChild(phdownhead);
+    const microhead = document.createElement('th');
+    microhead.appendChild(document.createTextNode("FloraMicro (mL)"));
+    theadrow.appendChild(microhead);
+    const veghead = document.createElement('th');
+    veghead.appendChild(document.createTextNode("FloraVeg (mL)"));
+    theadrow.appendChild(veghead);
+    const bloomhead = document.createElement('th');
+    bloomhead.appendChild(document.createTextNode("FloraBloom (mL)"));
+    theadrow.appendChild(bloomhead);
     const calmaghead = document.createElement('th');
-    calmaghead.appendChild(document.createTextNode("CalMag"));
+    calmaghead.appendChild(document.createTextNode("CalMag (mL)"));
     theadrow.appendChild(calmaghead);
     thead.appendChild(theadrow);
 }
@@ -40,6 +49,10 @@ const thead = document.createElement('thead');
 let selected_plant = inpPlant.value;
 
 // Callbacks
+function pullNutrientSchedule(responseText) {
+    nutrient_schedule = tryParseJSON(responseText);
+}
+
 function pullCurrentPlants(responseText) {
     current_plants = tryParseJSON(responseText);
 }
@@ -51,6 +64,7 @@ function updatePlant(value) {
 
 // GET requests
 getRequest('/get/current.json', pullCurrentPlants, retrieveErrorMsg('current plants'));
+getRequest('/get/nutrients.json', pullNutrientSchedule, retrieveErrorMsg('nutrient schedule'));
 
 // Setup
 changeTable(selected_plant);
@@ -60,7 +74,7 @@ async function changeTable(id) {
     if (nutrient_data[id] == null) {
         getNutrientData(id);
     } else {
-        replaceTable(id);
+        await replaceTable(id);
     }
 }
 
@@ -72,20 +86,43 @@ function getNutrientData(id) {
     getRequest('/get/nutrient_' + id + '.json', cb, retrieveErrorMsg('plant with id (' + id + ')'));
 }
 
-function replaceTable(id) {
+async function replaceTable(id) {
     const table = document.createElement('table');
     const tbody = document.createElement('tbody');
     
+    while (nutrient_schedule == null) {
+        await new Promise(resolve => setTimeout(resolve, 20));
+    }
     for (let key in nutrient_data[id]) {
         const row = document.createElement('tr');
+        row.classList.add('datarow');
         const date = document.createElement('td');
         date.appendChild(document.createTextNode(new Date(parseFloat(key) * 1000).toLocaleString('en-US', { timeZone: 'EST' })));
         row.appendChild(date);
-        for (let v of nutrient_data[id][key]) {
+        for (let i = 0; i < nutrient_data[id][key].length - 1; ++i) {
+            let v = nutrient_data[id][key][i];
+            if (i == 1) {
+                v = v == '1' ? 'Yes' : 'No';
+            }
             const td = document.createElement('td');
             td.appendChild(document.createTextNode(v));
             row.appendChild(td);
         }
+        const week = nutrient_schedule[nutrient_data[id][key][3]];
+        const gals = nutrient_data[id][key][0];
+        const percent = nutrient_data[id][key][2];
+        for (let i = 0; i < 3; ++i) {
+            const td = document.createElement('td');
+            td.appendChild(document.createTextNode(week[i] * gals * percent * 0.01));
+            row.appendChild(td);
+        }
+        const td = document.createElement('td');
+        if (nutrient_data[id][key][6] == '1') {
+            td.appendChild(document.createTextNode(week[3] * gals * percent * 0.01));
+        } else {
+            td.appendChild(document.createTextNode('0'));
+        }
+        row.appendChild(td);
         tbody.appendChild(row);
     }
 
