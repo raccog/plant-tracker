@@ -1,6 +1,3 @@
-// Data from server
-let nutrient_schedule, current_plants;
-
 // DOM elements
 // Inputs
 const inpPercentages = {};
@@ -36,15 +33,7 @@ let gal = parseInt(inpGal.value);
 let calmag = checkCalmag.checked;
 
 // Callbacks
-function pullNutrientSchedule(responseText) {
-    nutrient_schedule = tryParseJSON(responseText);
-    calculate();
-}
-
-function pullCurrentPlants(responseText) {
-    current_plants = tryParseJSON(responseText);
-    if (current_plants == null) return;
-
+function findCurrentElements() {
     for (let id of current_plants) {
         inpPercentages[id] = document.getElementById('percentage-' + id);
         checkReplaces[id] = document.getElementById('replace-' + id);
@@ -94,8 +83,8 @@ function updateShareReplace(value) {
 }
 
 // Get requests
-getRequest('/get/nutrients.json', pullNutrientSchedule, retrieveErrorMsg('nutrient schedule'));
-getRequest('/get/current.json', pullCurrentPlants, retrieveErrorMsg('current plants'));
+getNutrientSchedule(_ => calculate());
+getCurrentPlants(_ => findCurrentElements());
 
 // Setup
 const labels = ['micro', 'veg', 'bloom', 'guard', 'calmag'];
@@ -201,22 +190,22 @@ function postPlant() {
     if (Array.isArray(data)) {
         for (let d of data) {
             confirmMsg += '\n' + d['id'] + ':\n\nWeek: ' + d['week'] + '\nGallons: ' + d['gal'] +
-            'gal\nPercentage: ' + d['percent'] + '\%\nReplace: ' + d['replace'] +
-            '\npH Up: ' + d['pHup'] + 'mL\npH Down: ' + d['pHdown'] +
-            'mL\nCalMag: ' + d['calmag'] + '\n\n';
+                'gal\nPercentage: ' + d['percent'] + '\%\nReplace: ' + d['replace'] +
+                '\npH Up: ' + d['pHup'] + 'mL\npH Down: ' + d['pHdown'] +
+                'mL\nCalMag: ' + d['calmag'] + '\n\n';
         }
     } else {
         confirmMsg += '\n\nWeek: ' + data['week'] + '\nGallons: ' + data['gal'] + 'gal\nPercentage: ' + data['percent'] + '\%\nReplace: ' + data['replace'] + '\npH Up: ' + data['pHup'] + 'mL\npH Down: ' + data['pHdown'] + 'mL\nCalMag: ' + data['calmag'];
     }
     if (confirm(confirmMsg)) {
-            if (Array.isArray(data)) {
-                for (let d of data) {
-                    postRecord(d);
-                }
-            } else {
-                postRecord(data);
+        if (Array.isArray(data)) {
+            for (let d of data) {
+                postRecord(d);
             }
-            restSuccess('Record was sent to database');
+        } else {
+            postRecord(data);
+        }
+        restSuccess('Record was sent to database');
     } else {
         restError('Posting this record was cancelled');
     }

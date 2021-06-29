@@ -98,7 +98,9 @@
             </div>
           {% endfor %}
         </div>
-        <script src={{ url_for('static', filename='js/common.js') }}></script>
+        <script src={{ url_for('static', filename='js/common/util.js') }}></script>
+        <script src={{ url_for('static', filename='js/common/current_plants.js') }}></script>
+        <script src={{ url_for('static', filename='js/common/nutrient_schedule.js') }}></script>
         <script src={{ url_for('static', filename='js/calculator.js') }}></script>
     </body>
 </html>

@@ -1,7 +1,3 @@
-// Data from server
-let nutrient_schedule, current_plants;
-const nutrient_data = {};
-
 // DOM elements
 // Inputs
 const inpPlant = document.getElementById('plant');
@@ -49,12 +45,10 @@ const thead = document.createElement('thead');
 let selected_plant = inpPlant.value;
 
 // Callbacks
-function pullNutrientSchedule(responseText) {
-    nutrient_schedule = tryParseJSON(responseText);
-}
-
-function pullCurrentPlants(responseText) {
-    current_plants = tryParseJSON(responseText);
+function checkCurrentAndSchedule() {
+    if (nutrient_schedule != null && current_plants != null) {
+        changeTable(selected_plant);
+    }
 }
 
 function updatePlant(value) {
@@ -63,27 +57,17 @@ function updatePlant(value) {
 }
 
 // GET requests
-getRequest('/get/current.json', pullCurrentPlants, retrieveErrorMsg('current plants'));
-getRequest('/get/nutrients.json', pullNutrientSchedule, retrieveErrorMsg('nutrient schedule'));
-
-// Setup
-changeTable(selected_plant);
+getNutrientSchedule(_ => checkCurrentAndSchedule());
+getCurrentPlants(_ => checkCurrentAndSchedule());
+getNutrientData(selected_plant, _ => replaceTable[selected_plant]);
 
 // Page functions
 async function changeTable(id) {
     if (nutrient_data[id] == null) {
-        getNutrientData(id);
+        getNutrientData(id, _ => replaceTable[id]);
     } else {
         await replaceTable(id);
     }
-}
-
-function getNutrientData(id) {
-    const cb = function(responseText) {
-        nutrient_data[id] = tryParseJSON(responseText);
-        replaceTable(id);
-    };
-    getRequest('/get/nutrient_' + id + '.json', cb, retrieveErrorMsg('plant with id (' + id + ')'));
 }
 
 async function replaceTable(id) {

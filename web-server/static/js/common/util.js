@@ -24,6 +24,14 @@ function visibilityChange(value) {
     return value ? 'inherit' : 'hidden';
 }
 
+function combineCallbacks(dataCallback, extraCallback) {
+    return (extraCallback == null ? dataCallback :
+        responseText => {
+            dataCallback(responseText);
+            extraCallback(responseText);
+        });
+}
+
 async function getRequest(url, callback, restmsg) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -59,7 +67,7 @@ function tryParseJSON(json, url) {
     let data;
     try {
         data = JSON.parse(json);
-    } catch(_) {
+    } catch (_) {
         restError('Recieved invalid json data from ' + url);
     }
     return data;
