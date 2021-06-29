@@ -59,7 +59,7 @@ function updatePlant(value) {
 // GET requests
 getNutrientSchedule(_ => checkCurrentAndSchedule());
 getCurrentPlants(_ => checkCurrentAndSchedule());
-getNutrientData(selected_plant, _ => replaceTable[selected_plant]);
+getNutrientData(selected_plant, _ => replaceTable(selected_plant));
 
 // Page functions
 async function changeTable(id) {

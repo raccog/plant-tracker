@@ -22,7 +22,7 @@ td {
 
 tr.datarow:hover {background-color: #ddd;}
 
-table {
+#data_table {
     width: 100%;
     table-layout: fixed;
 }
