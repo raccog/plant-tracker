@@ -32,6 +32,7 @@ function replaceChart(id) {
         line: {
             dash: 'solid',
             color: 'rgb(10, 10, 10)',
+            shape: 'spline',
             width: 4
         }
     };
@@ -43,6 +44,7 @@ function replaceChart(id) {
         line: {
             dash: 'dashdot',
             color: 'rgb(43, 255, 0)',
+            shape: 'spline',
             width: 3
         }
     };
@@ -54,6 +56,7 @@ function replaceChart(id) {
         line: {
             dash: 'dash',
             color: 'rgb(255, 25, 25)',
+            shape: 'spline',
             width: 3
         }
     };
@@ -65,6 +68,7 @@ function replaceChart(id) {
         line: {
             dash: 'solid',
             color: 'rgb(0, 255, 255)',
+            shape: 'spline',
             width: 3
         }
     };
@@ -76,6 +80,7 @@ function replaceChart(id) {
         line: {
             dash: 'dash',
             color: 'rgb(0, 0, 255)',
+            shape: 'spline',
             width: 2
         }
     };
@@ -87,6 +92,7 @@ function replaceChart(id) {
         line: {
             dash: 'dash',
             color: 'rgb(255, 128, 0)',
+            shape: 'spline',
             width: 2
         }
     };
