@@ -27,8 +27,10 @@ function replaceChart(id) {
     const microdata = {
         x: labels,
         y: [],
+        xaxis: 'x',
+        yaxis: 'y1',
         name: 'FloraMicro',
-        mode: 'lines+markers',
+        mode: 'lines',
         line: {
             dash: 'solid',
             color: 'rgb(10, 10, 10)',
@@ -39,8 +41,10 @@ function replaceChart(id) {
     const vegdata = {
         x: labels,
         y: [],
+        xaxis: 'x',
+        yaxis: 'y1',
         name: 'FloraVeg',
-        mode: 'lines+markers',
+        mode: 'lines',
         line: {
             dash: 'dashdot',
             color: 'rgb(43, 255, 0)',
@@ -51,8 +55,10 @@ function replaceChart(id) {
     const bloomdata = {
         x: labels,
         y: [],
+        xaxis: 'x',
+        yaxis: 'y1',
         name: 'FloraBloom',
-        mode: 'lines+markers',
+        mode: 'lines',
         line: {
             dash: 'dash',
             color: 'rgb(255, 25, 25)',
@@ -63,20 +69,24 @@ function replaceChart(id) {
     const calmagdata = {
         x: labels,
         y: [],
+        xaxis: 'x',
+        yaxis: 'y1',
         name: 'CalMag',
-        mode: 'lines+markers',
+        mode: 'lines',
         line: {
-            dash: 'solid',
+            dash: 'dash',
             color: 'rgb(0, 255, 255)',
             shape: 'spline',
-            width: 3
+            width: 2
         }
     };
     const phupdata = {
         x: labels,
         y: [],
+        xaxis: 'x',
+        yaxis: 'y1',
         name: 'pH Up',
-        mode: 'lines+markers',
+        mode: 'lines',
         line: {
             dash: 'dash',
             color: 'rgb(0, 0, 255)',
@@ -87,10 +97,26 @@ function replaceChart(id) {
     const phdowndata = {
         x: labels,
         y: [],
+        xaxis: 'x',
+        yaxis: 'y1',
         name: 'pH Down',
-        mode: 'lines+markers',
+        mode: 'lines',
         line: {
             dash: 'dash',
+            color: 'rgb(255, 128, 0)',
+            shape: 'spline',
+            width: 2
+        }
+    };
+    const percentdata = {
+        x: labels,
+        y: [],
+        xaxis: 'x',
+        yaxis: 'y2',
+        name: 'Nutrient Percentage',
+        mode: 'lines+markers',
+        line: {
+            dash: 'solid',
             color: 'rgb(255, 128, 0)',
             shape: 'spline',
             width: 2
@@ -110,18 +136,29 @@ function replaceChart(id) {
         }
         phupdata['y'].push(nutrient_data[id][key][4] / gals);
         phdowndata['y'].push(nutrient_data[id][key][5] / gals);
+        percentdata['y'].push(nutrient_data[id][key][2]);
     }
-    const data = [microdata, vegdata, bloomdata, calmagdata, phupdata, phdowndata];
+    const data = [microdata, vegdata, bloomdata, calmagdata, phupdata, phdowndata, percentdata];
     const layout = {
       title: 'mL per Gallon of Nutrients and Supplements Over Time',
       xaxis: {
-        title: 'Date'
+          title: "Date"
       },
-      yaxis: {
+      yaxis1: {
         title: 'mL per Gallon'
-      }
+      },
+      yaxis2: {
+        title: 'Percent (%)'
+      },
+      grid: {
+        rows: 2,
+        columns: 1,
+        subplots: ['xy1', 'xy2'],
+        roworder:'bottom to top'
+      },
     };
-    Plotly.newPlot(mychart, data, layout);
+    const config = {responsive: true}
+    Plotly.newPlot(mychart, data, layout, config);
 }
 
 // GET requests

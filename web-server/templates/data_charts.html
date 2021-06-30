@@ -16,7 +16,7 @@
             <option value={{ id }}>{{ name }}</option>
             {% endfor %}
         </select>
-        <div id="mychart" style="width:600px;height:400px;"></div>
+        <div id="mychart"></div>
         <script src="https://cdn.plot.ly/plotly-2.2.0.min.js"></script>
         <script src={{ url_for('static', filename='js/common/util.js') }}></script>
         <script src={{ url_for('static', filename='js/common/current_plants.js') }}></script>
