@@ -12,6 +12,9 @@
             {% for id, name in current_names %}
             <option value={{ id }}>{{ name }}</option>
             {% endfor %}
+            {% for id, name in other_names %}
+            <option value={{ id }}>{{ name }}</option>
+            {% endfor %}
         </select>
         <div id="mychart" style="width:600px;height:400px;"></div>
         <script src="https://cdn.plot.ly/plotly-2.2.0.min.js"></script>

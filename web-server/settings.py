@@ -18,6 +18,8 @@ class _Settings:
         self.nutrient_schedule_path = None
         self.current_plants = None
         self.current_names = None
+        self.other_plants = None
+        self.other_names = None
 
 
 # Static server settings
@@ -38,13 +40,23 @@ def get_db_path():
     settings.nutrient_db_path = Path(settings.db_path).joinpath('nutrients')
 
 
-def update_current():
+def pull_current_plants():
     from .database import get_current_names
     from .file_edit import read_current_plants
     settings.current_plants = read_current_plants()
     settings.current_names = get_current_names()
 
 
+def pull_all_plants():
+    pull_current_plants()
+    from .database import get_all_names
+    settings.other_names = dict(get_all_names())
+    for id in settings.current_plants:
+        settings.other_names.pop(id)
+    settings.other_plants = list(settings.other_names.keys())
+    settings.other_names = settings.other_names.items()
+
+
 def init_settings():
     get_db_path()
-    update_current()
+    pull_all_plants()

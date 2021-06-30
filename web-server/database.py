@@ -37,6 +37,13 @@ def get_current_names():
     return names
 
 
+def get_all_names():
+    (con, cur) = _id_db()
+    names = cur.execute('select * from names').fetchall()
+    con.close()
+    return names
+
+
 def add_record(nid, record):
     (con, cur) = _nutrient_db(nid)
     cur.execute("insert into data values (?, ?, ?, ?, ?, ?, ?, ?)", record)

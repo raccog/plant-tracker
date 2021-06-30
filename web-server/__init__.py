@@ -6,7 +6,7 @@ from flask import Flask, render_template, request
 from .database import add_data, add_record, new_plants, create_db, new_event, new_comment
 from .file_edit import write_current_plants
 from .json_sql import pull_nutrient_schedule, pull_plant_nutrients
-from .settings import init_settings, settings, update_current
+from .settings import init_settings, settings, pull_all_plants
 
 
 init_settings()
@@ -52,7 +52,7 @@ def data_tables_page():
 
 @app.route("/data_charts")
 def data_charts_page():
-    return render_template('data_charts.html', current_names=settings.current_names)
+    return render_template('data_charts.html', current_names=settings.current_names, other_names=settings.other_names)
 
 
 @app.route("/get/nutrients.json")
@@ -109,6 +109,6 @@ def grow_post():
     write_current_plants(nids)
     for nid in nids:
         create_db(nid)
-    update_current()
+    pull_all_plants()
 
     return '', 200
