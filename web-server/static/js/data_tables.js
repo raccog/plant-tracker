@@ -45,20 +45,14 @@ const thead = document.createElement('thead');
 let selected_plant = inpPlant.value;
 
 // Callbacks
-function checkCurrentAndSchedule() {
-    if (nutrient_schedule != null && current_plants != null) {
-        changeTable(selected_plant);
-    }
-}
-
 function updatePlant(value) {
     selected_plant = value;
     changeTable(selected_plant);
 }
 
 // GET requests
-getNutrientSchedule(_ => checkCurrentAndSchedule());
-getCurrentPlants(_ => checkCurrentAndSchedule());
+getNutrientSchedule(_ => checkCurrentAndSchedule(_ => changeTable(selected_plant)));
+getCurrentPlants(_ => checkCurrentAndSchedule(_ => changeTable(selected_plant)));
 getNutrientData(selected_plant, _ => replaceTable(selected_plant));
 
 // Page functions

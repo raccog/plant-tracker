@@ -32,6 +32,16 @@ function combineCallbacks(dataCallback, extraCallback) {
         });
 }
 
+function checkCurrentAndSchedule(callback) {
+    if (nutrient_schedule != null && current_plants != null) {
+        callback();
+    }
+}
+
+function timestampToDateTime(timestamp) {
+    new Date(timestamp * 1000).toLocaleString('en-US', { timeZone: 'EST' });
+}
+
 async function getRequest(url, callback, restmsg) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {

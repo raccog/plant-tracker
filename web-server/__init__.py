@@ -50,6 +50,11 @@ def data_tables_page():
     return render_template('data_tables.html', current_names=settings.current_names)
 
 
+@app.route("/data_charts")
+def data_charts_page():
+    return render_template('data_charts.html', current_names=settings.current_names)
+
+
 @app.route("/get/nutrients.json")
 def nutrient_schedule_data():
     return pull_nutrient_schedule()
