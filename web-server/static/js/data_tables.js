@@ -58,7 +58,7 @@ getNutrientData(selected_plant, _ => replaceTable(selected_plant));
 // Page functions
 async function changeTable(id) {
     if (nutrient_data[id] == null) {
-        getNutrientData(id, _ => replaceTable[id]);
+        getNutrientData(id, _ => replaceTable(id));
     } else {
         await replaceTable(id);
     }

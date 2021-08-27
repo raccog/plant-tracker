@@ -26,9 +26,9 @@ def pull_nutrient_schedule():
         return None
 
 
-def pull_plant_nutrients(id):
+def pull_plant_nutrients(plant_id):
     from .settings import settings
-    db_path = settings.nutrient_db_path.joinpath(f'{id.zfill(3)}.db')
+    db_path = settings.nutrient_db_path.joinpath(f'{plant_id.zfill(3)}.db')
     if not db_path.is_file():
         logger.critical(f"Plant's nutrient database is not a valid file at path: {db_path}")
         return None
@@ -38,6 +38,23 @@ def pull_plant_nutrients(id):
 
     try:
         return json.dumps({row[0]: list(row[1:]) for row in cur.execute("select * from data")})
+    except DatabaseError:
+        logger.critical(f"Plant's nutrient database is not a valid sqlite3 database at path: {db_path}")
+        return None
+
+
+def pull_plant_events(plant_id):
+    from .settings import settings
+    db_path = settings.nutrient_db_path.joinpath(f'{plant_id.zfill(3)}.db')
+    if not db_path.is_file():
+        logger.critical(f"Plant's nutrient database is not a valid file at path: {db_path}")
+        return None
+
+    con = sqlite3.connect(db_path)
+    cur = con.cursor()
+
+    try:
+        return json.dumps({row[0]: row[1] for row in cur.execute("select * from events")})
     except DatabaseError:
         logger.critical(f"Plant's nutrient database is not a valid sqlite3 database at path: {db_path}")
         return None

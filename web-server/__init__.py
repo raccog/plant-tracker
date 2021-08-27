@@ -3,9 +3,9 @@ from time import time, sleep
 import json
 from flask import Flask, render_template, request
 
-from .database import add_data, add_record, new_plants, create_db, new_event, new_comment
+from .database import add_data, add_record, get_current_names, new_plants, create_db, new_event, new_comment
 from .file_edit import write_current_plants
-from .json_sql import pull_nutrient_schedule, pull_plant_nutrients
+from .json_sql import pull_nutrient_schedule, pull_plant_nutrients, pull_plant_events
 from .settings import init_settings, settings, pull_all_plants
 
 
@@ -55,19 +55,37 @@ def data_charts_page():
     return render_template('data_charts.html', current_names=settings.current_names, other_names=settings.other_names)
 
 
+@app.route("/event_tables")
+def event_tables_page():
+    return render_template('event_tables.html', current_names=settings.current_names)
+
+
 @app.route("/get/nutrients.json")
 def nutrient_schedule_data():
     return pull_nutrient_schedule()
 
 
 @app.route("/get/current.json")
-def current_data():
+def current_nids():
     return json.dumps([str(x) for x in settings.current_plants])
 
 
-@app.route("/get/nutrient_<id>.json")
-def plant_nutrient_data(id):
-    data = pull_plant_nutrients(id)
+@app.route("/get/current_names.json")
+def current_names():
+    return json.dumps(dict(get_current_names()))
+
+
+@app.route("/get/nutrient_<plant_id>.json")
+def plant_nutrient_data(plant_id):
+    data = pull_plant_nutrients(plant_id)
+    if data is None:
+        return '', 404
+    return data, 200
+
+
+@app.route("/get/events_<plant_id>.json")
+def plant_events(plant_id):
+    data = pull_plant_events(plant_id)
     if data is None:
         return '', 404
     return data, 200

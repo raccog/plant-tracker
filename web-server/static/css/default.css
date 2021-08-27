@@ -20,6 +20,10 @@ td {
     text-align: right;
 }
 
+#left_align {
+    text-align: left;
+}
+
 tr.datarow:hover {background-color: #ddd;}
 
 #data_table {
